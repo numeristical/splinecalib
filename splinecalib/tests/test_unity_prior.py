@@ -35,6 +35,21 @@ def test_identity_calibration_unity():
     max_err = np.max(np.abs(sc.calibrate(tvec) - tvec))
     assert(max_err<.01)
 
+def test_identity_calibration_unity_non_default():
+    """This tests that adding unity prior with high weight to a small, 
+    well calibrated data set gives good results.  Specifically, it does not
+    deviate too far from the line y=x"""
+    npts = 100
+    np.random.seed(42)
+    xvec = np.random.uniform(size =npts)
+    yvec = np.random.binomial(n=1, p=xvec)
+    sc = splc.SplineCalib(unity_prior=True, unity_prior_weight=5000, 
+                            unity_prior_gridpts=np.linspace(.01,.99,99))
+    sc.fit(xvec, yvec)
+    tvec = np.linspace(.001,.999,999)
+    max_err = np.max(np.abs(sc.calibrate(tvec) - tvec))
+    assert(max_err<.01)
+
 def test_identity_calibration_reg_param():
     """This tests overriding the choice of reg_param_vec."""
     npts = 5000

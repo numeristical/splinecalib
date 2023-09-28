@@ -13,7 +13,7 @@ setuptools.setup(
     license="MIT",
     license_files=['LICENSE'],
     description="SplineCalib is a Python package for calibrating ML models using smoothing splines.  See documentation at: https://splinecalib.readthedocs.io/",
-    version='0.0.4',
+    version='0.0.7',
     long_description=README,
     url='https://github.com/numeristical/splinecalib',
     packages=['splinecalib'],

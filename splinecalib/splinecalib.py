@@ -61,13 +61,13 @@ class SplineCalib(object):
 
     unity_prior : bool
         If True, routine will add synthetic data along the axis y=x as
-        a "prior" distribution that favors that function.  Default is False.
+        a "prior" distribution that favors that function.  Default is True.
 
     unity_prior_weight : 
         Ignored if unity_prior=False.  The total weight of data points added 
         when unity_prior is set to True.  Bigger values will force the calibration
-        curve closer to the line y=x. Default is 10, meaning the synthetic data in 
-        total counts as much weight as 10 data points.
+        curve closer to the line y=x. Default is 20, meaning the synthetic data in 
+        total counts as much weight as 20 data points.
 
     unity_prior_gridpts : 'default' or list-like
         Ignored if unity_prior = False. Which points to use in order to create 
@@ -124,8 +124,8 @@ class SplineCalib(object):
     def __init__(self,method='L-BFGS-B',
                  knot_sample_size = 30, add_knots = 'auto',
                  reg_param_vec = 'default', cv_spline=5, random_state=42,
-                 unity_prior=False, unity_prior_gridpts='default', 
-                 unity_prior_weight=10, max_iter=1000, tol=.0001,
+                 unity_prior=True, unity_prior_gridpts='default', 
+                 unity_prior_weight=20, max_iter=1000, tol=.0001,
                  logodds_scale=True, logodds_eps='auto', reg_prec=4,
                  force_knot_endpts=True, param_search_mode='fast'):
         self.knot_sample_size = knot_sample_size
@@ -209,7 +209,8 @@ class SplineCalib(object):
         self.use_weights = False
         if self.unity_prior:
             self.use_weights = True
-            if self.unity_prior_gridpts=='default':
+            if type(self.unity_prior_gridpts)==str:
+                # Assume self.unity_prior_gridpts=='default':
                 a1 = 10**(np.linspace(-8,-2,19))
                 a2 = np.linspace(.01,.99,99)
                 a3 = 1-a1
@@ -217,8 +218,17 @@ class SplineCalib(object):
                 self.unity_prior_weightvec=np.concatenate((1/18*np.ones(18),
                                                         np.ones(99),
                                                         1/18*np.ones(18)))
-            coda_wt = self.unity_prior_weight / np.sum(self.unity_prior_weightvec)
-            weightvec = np.concatenate((np.ones(len(y_model)), 
+                # There may be a mistake here - what if unity_prior_weightvec not defined?
+                coda_wt = self.unity_prior_weight / np.sum(self.unity_prior_weightvec)
+                weightvec = np.concatenate((np.ones(len(y_model)), 
+                                        coda_wt * self.unity_prior_weightvec))
+            else:
+                # Assume can be coerced into np array
+                self.unity_prior_gridpts = np.unique(np.array(self.unity_prior_gridpts))
+                num_wt_pts = len(self.unity_prior_gridpts)
+                coda_wt = self.unity_prior_weight/num_wt_pts
+                self.unity_prior_weightvec = coda_wt * np.ones(num_wt_pts)
+                weightvec = np.concatenate((np.ones(len(y_model)), 
                                         coda_wt * self.unity_prior_weightvec))
             self.final_weightvec = weightvec
             y_model = np.concatenate((y_model, self.unity_prior_gridpts))

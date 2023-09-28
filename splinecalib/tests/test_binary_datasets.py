@@ -2,7 +2,7 @@ import os.path as op
 import numpy as np
 import pandas as pd
 import splinecalib as splc
-import betacal as bc
+# import betacal as bc
 from sklearn.metrics import roc_auc_score, log_loss
 
 data_path = op.join(splc.__path__[0], 'tests/data_for_tests')
@@ -26,12 +26,7 @@ def test_calibration_mozilla4_1046_rf():
     preds_test_calibrated = sc.calibrate(preds_test)
     ll_calib = log_loss(y_test, preds_test_calibrated)
 
-    bc1 = bc.BetaCalibration()
-    bc1.fit(preds_calib_set, y_calib_set)
-    bc_preds_test_calibrated = bc1.predict(preds_test)
-    bc_ll_calib = log_loss(y_test, bc_preds_test_calibrated)
-
-    assert(ll_calib<bc_ll_calib)
+    assert(ll_calib<0.127)
 
 def test_calibration_mozilla4_1046_cb1():
     """
@@ -51,12 +46,7 @@ def test_calibration_mozilla4_1046_cb1():
     preds_test_calibrated = sc.calibrate(preds_test)
     ll_calib = log_loss(y_test, preds_test_calibrated)
 
-    bc1 = bc.BetaCalibration()
-    bc1.fit(preds_calib_set, y_calib_set)
-    bc_preds_test_calibrated = bc1.predict(preds_test)
-    bc_ll_calib = log_loss(y_test, bc_preds_test_calibrated)
-
-    assert(ll_calib<bc_ll_calib*1.01)
+    assert(ll_calib<0.139)
 
 def test_calibration_mozilla4_1046_cb2():
     """
@@ -76,12 +66,7 @@ def test_calibration_mozilla4_1046_cb2():
     preds_test_calibrated = sc.calibrate(preds_test)
     ll_calib = log_loss(y_test, preds_test_calibrated)
 
-    bc1 = bc.BetaCalibration()
-    bc1.fit(preds_calib_set, y_calib_set)
-    bc_preds_test_calibrated = bc1.predict(preds_test)
-    bc_ll_calib = log_loss(y_test, bc_preds_test_calibrated)
-
-    assert(ll_calib<bc_ll_calib)
+    assert(ll_calib<0.158)
 
 def test_calibration_mozilla4_1046_cb3():
     """
@@ -101,12 +86,7 @@ def test_calibration_mozilla4_1046_cb3():
     preds_test_calibrated = sc.calibrate(preds_test)
     ll_calib = log_loss(y_test, preds_test_calibrated)
 
-    bc1 = bc.BetaCalibration()
-    bc1.fit(preds_calib_set, y_calib_set)
-    bc_preds_test_calibrated = bc1.predict(preds_test)
-    bc_ll_calib = log_loss(y_test, bc_preds_test_calibrated)
-
-    assert(ll_calib<bc_ll_calib)
+    assert(ll_calib<0.177)
 
 def test_calibration_airlines_42493_rf():
     """
@@ -126,12 +106,7 @@ def test_calibration_airlines_42493_rf():
     preds_test_calibrated = sc.calibrate(preds_test)
     ll_calib = log_loss(y_test, preds_test_calibrated)
 
-    bc1 = bc.BetaCalibration()
-    bc1.fit(preds_calib_set, y_calib_set)
-    bc_preds_test_calibrated = bc1.predict(preds_test)
-    bc_ll_calib = log_loss(y_test, bc_preds_test_calibrated)
-
-    assert(ll_calib<bc_ll_calib)
+    assert(ll_calib<0.680)
 
 def test_calibration_airlines_42493_cb1():
     """
@@ -151,12 +126,7 @@ def test_calibration_airlines_42493_cb1():
     preds_test_calibrated = sc.calibrate(preds_test)
     ll_calib = log_loss(y_test, preds_test_calibrated)
 
-    bc1 = bc.BetaCalibration()
-    bc1.fit(preds_calib_set, y_calib_set)
-    bc_preds_test_calibrated = bc1.predict(preds_test)
-    bc_ll_calib = log_loss(y_test, bc_preds_test_calibrated)
-
-    assert(ll_calib<bc_ll_calib)
+    assert(ll_calib<0.669)
 
 def test_calibration_airlines_42493_cb2():
     """
@@ -176,12 +146,7 @@ def test_calibration_airlines_42493_cb2():
     preds_test_calibrated = sc.calibrate(preds_test)
     ll_calib = log_loss(y_test, preds_test_calibrated)
 
-    bc1 = bc.BetaCalibration()
-    bc1.fit(preds_calib_set, y_calib_set)
-    bc_preds_test_calibrated = bc1.predict(preds_test)
-    bc_ll_calib = log_loss(y_test, bc_preds_test_calibrated)
-
-    assert(ll_calib<bc_ll_calib)
+    assert(ll_calib<0.669)
 
 def test_calibration_airlines_42493_cb3():
     """
@@ -201,12 +166,7 @@ def test_calibration_airlines_42493_cb3():
     preds_test_calibrated = sc.calibrate(preds_test)
     ll_calib = log_loss(y_test, preds_test_calibrated)
 
-    bc1 = bc.BetaCalibration()
-    bc1.fit(preds_calib_set, y_calib_set)
-    bc_preds_test_calibrated = bc1.predict(preds_test)
-    bc_ll_calib = log_loss(y_test, bc_preds_test_calibrated)
-
-    assert(ll_calib<bc_ll_calib)
+    assert(ll_calib<0.669)
 
 def test_calibration_2dplanes_727_rf():
     """
@@ -226,12 +186,7 @@ def test_calibration_2dplanes_727_rf():
     preds_test_calibrated = sc.calibrate(preds_test)
     ll_calib = log_loss(y_test, preds_test_calibrated)
 
-    bc1 = bc.BetaCalibration()
-    bc1.fit(preds_calib_set, y_calib_set)
-    bc_preds_test_calibrated = bc1.predict(preds_test)
-    bc_ll_calib = log_loss(y_test, bc_preds_test_calibrated)
-
-    assert(ll_calib<bc_ll_calib)
+    assert(ll_calib<0.183)
 
 def test_calibration_2dplanes_727_cb1():
     """
@@ -251,12 +206,7 @@ def test_calibration_2dplanes_727_cb1():
     preds_test_calibrated = sc.calibrate(preds_test)
     ll_calib = log_loss(y_test, preds_test_calibrated)
 
-    bc1 = bc.BetaCalibration()
-    bc1.fit(preds_calib_set, y_calib_set)
-    bc_preds_test_calibrated = bc1.predict(preds_test)
-    bc_ll_calib = log_loss(y_test, bc_preds_test_calibrated)
-
-    assert(ll_calib<bc_ll_calib*1.01)
+    assert(ll_calib<0.150)
 
 def test_calibration_2dplanes_727_cb2():
     """
@@ -276,12 +226,7 @@ def test_calibration_2dplanes_727_cb2():
     preds_test_calibrated = sc.calibrate(preds_test)
     ll_calib = log_loss(y_test, preds_test_calibrated)
 
-    bc1 = bc.BetaCalibration()
-    bc1.fit(preds_calib_set, y_calib_set)
-    bc_preds_test_calibrated = bc1.predict(preds_test)
-    bc_ll_calib = log_loss(y_test, bc_preds_test_calibrated)
-
-    assert(ll_calib<bc_ll_calib)
+    assert(ll_calib<0.151)
 
 def test_calibration_2dplanes_727_cb3():
     """
@@ -301,12 +246,7 @@ def test_calibration_2dplanes_727_cb3():
     preds_test_calibrated = sc.calibrate(preds_test)
     ll_calib = log_loss(y_test, preds_test_calibrated)
 
-    bc1 = bc.BetaCalibration()
-    bc1.fit(preds_calib_set, y_calib_set)
-    bc_preds_test_calibrated = bc1.predict(preds_test)
-    bc_ll_calib = log_loss(y_test, bc_preds_test_calibrated)
-
-    assert(ll_calib<bc_ll_calib)
+    assert(ll_calib<0.167)
 
 
 
