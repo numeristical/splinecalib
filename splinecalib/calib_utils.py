@@ -8,31 +8,28 @@ import warnings
 from scipy.stats import binom
 from loss_fun_c import pen_ll_fun, pen_ll_fun_grad
 
-def _natural_cubic_spline_basis_expansion(xpts, knots):
+def _natural_cubic_spline_basis_expansion(z, knots):
     """Does the natural cubis spline bases for a set of points and knots"""
-    num_knots = len(knots)
-    num_pts = len(xpts)
-    outmat = np.zeros((num_pts,num_knots))
-    outmat[:, 0] = np.ones(num_pts)
-    outmat[:, 1] = xpts
+    nr_knots = knots.shape[0]
+    nr_data = z.shape[0]
 
-    def make_func_H(k):
-        def make_func_d(k):
-            def func_d(x):
-                denom = knots[-1] - knots[k-1]
-                numer = (np.maximum(x-knots[k-1], np.zeros(len(x))) ** 3 - 
-                        np.maximum(x-knots[-1], np.zeros(len(x))) ** 3)
-                return numer/denom
-            return func_d
+    # we explicitly make z a column vector to facilitate broadcasting, namely in the
+    # subtraction z - knots[:nr_knots - 1] -> array shape [nr_data, nr_knots - 1]
+    z = z[:, np.newaxis]
 
-        def func_H(x):
-            d_fun_k = make_func_d(k)
-            d_fun_Km1 = make_func_d(num_knots-1)
-            return d_fun_k(x) -  d_fun_Km1(x)
-        return func_H
-    for i in range(1, num_knots-1):
-        curr_H_fun = make_func_H(i)
-        outmat[:, i+1] = curr_H_fun(xpts)
+    outmat = np.zeros((nr_data, nr_knots), dtype=np.float64)
+    outmat[:, 0] = np.ones(nr_data, dtype=np.float64)
+    outmat[:, 1] = z.squeeze()
+
+    final_cubic_term = non_negative((z - knots[-1])) ** 3
+    numerator = (
+        non_negative((z - knots[: nr_knots - 1])) ** 3 - final_cubic_term
+    )  # array shape (nr_data, nr_knots-1)
+    denominator = knots[-1] - knots[: nr_knots - 1]  # array shape (nr_knots-1, )
+    d = numerator / denominator  # array shape (nr_data, nr_knots-1)
+    phi = d[:, :-1] - d[:, [-1]]  # n.b. the [] around -1 req'd to retain the dimension
+
+    outmat[:, 2:] = phi
     return outmat
 
 
