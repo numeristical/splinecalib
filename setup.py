@@ -13,7 +13,7 @@ setuptools.setup(
     license="MIT",
     license_files=['LICENSE'],
     description="SplineCalib is a Python package for calibrating ML models using smoothing splines.  See documentation at: https://splinecalib.readthedocs.io/",
-    version='0.0.8',
+    version='0.0.9',
     long_description=README,
     url='https://github.com/numeristical/splinecalib',
     packages=['splinecalib'],
@@ -21,7 +21,7 @@ setuptools.setup(
                  'splinecalib'},
     python_requires=">=3.5",
     install_requires=[
-        "numpy>=1.16",
+        "numpy>=1.16, <2",
         "scipy>=1.3"],
     ext_modules=[setuptools.Extension("loss_fun_c", ["splinecalib/loss_fun_c.c"],
                                       include_dirs=[numpy.get_include()])],
