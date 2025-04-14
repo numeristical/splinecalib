@@ -1,5 +1,7 @@
+# cython: language_level=3
 cimport cython
 cimport numpy as cnp
+cnp.import_array()
 import numpy as np
 from libc.math cimport log as clog
 from libc.math cimport exp
